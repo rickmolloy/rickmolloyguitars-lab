@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gore–Gilet Acoustic Guitar Model — 1/2/3/4 DOF + Peak Labels</title>
+    <link rel="stylesheet" href="../common/4dof/styles.css">
+</head>
+
+<body>
+    <header class="card pad">
+        <h1>Gore–Gilet Acoustic Guitar Model — 1/2/3/4 DOF (Coupled)</h1>
+        <div class="muted">
+            1DOF (Helmholtz) • 2DOF (Top+Air) • 3DOF (Top+Back+Air) • 4DOF (Top+Back+Air+Sides).
+            Based on Gore &amp; Gilet Vol. 2 §2.4.1 and Jim Kirby’s determinant expansion (2012). Frequency axis
+            0–500&nbsp;Hz.
+        </div>
+    </header>
+
+    <main>
+        <section class="card pad controls-panel">
+
+            <!-- MODEL ORDER -->
+            <h3 class="section">Model Complexity</h3>
+            <div class="row"><label>Order</label>
+                <div class="val"><span id="model_label">4‑DOF</span></div>
+            </div>
+            <input type="range" id="model_order" min="1" max="4" step="1" value="4" list="model_ticks">
+            <datalist id="model_ticks">
+                <option value="1"></option>
+                <option value="2"></option>
+                <option value="3"></option>
+                <option value="4"></option>
+            </datalist>
+            <div class="row" style="margin-top:8px;">
+                <label><input type="checkbox" id="show_labels" checked> Show peak labels</label>
+                <span class="badge">Force target: Air (1DOF) • Top (2–4DOF)</span>
+            </div>
+            <div class="small">The solver and visible controls adapt to the chosen order. Peaks are auto‑labeled by
+                dominant subsystem.</div>
+
+            <div class="control-grid">
+                <!-- ENVIRONMENTAL -->
+                <details id="blk_environment" class="control-card" open>
+                    <summary>Environmental</summary>
+                    <div class="row"><label>Ambient Air Temp (°C / °F)</label>
+                        <div class="val" id="ambient_temp_val">20.0 °C</div>
+                    </div>
+                    <input type="range" id="ambient_temp" min="-10" max="40" step="0.5" value="20">
+                    <div class="row"><label>Altitude (m)</label>
+                        <div class="val" id="altitude_val">0 m (0 ft)</div>
+                    </div>
+                    <input type="range" id="altitude" min="0" max="4000" step="10" value="0">
+                    <div class="small" id="atm_meta">ρ ≈ 1.205 kg/m³ • c ≈ 340.0 m/s</div>
+                    <div class="row" style="margin-top:10px;"><label>Driving Force F (N)</label>
+                        <div class="val" id="driving_force_val">0.40</div>
+                    </div>
+                    <input type="range" id="driving_force" min="0.10" max="1.00" step="0.01" value="0.40">
+                </details>
+
+                <!-- AIR -->
+                <details id="blk_air" class="control-card" open>
+                    <summary>Air (Helmholtz) Mode</summary>
+                    <div class="row"><label>Soundhole Area A<sub>h</sub> (m²)</label>
+                        <div class="val" id="area_hole_val">0.00550 m² (diameter 83.6 mm)</div>
+                    </div>
+                    <input type="range" id="area_hole" min="0.0030" max="0.0100" step="0.000001" value="0.0055">
+                    <div class="row"><label>Moving Air Mass m<sub>a</sub> (g)</label>
+                        <div class="val" id="mass_air_val">0.50 g</div>
+                    </div>
+                    <input type="range" id="mass_air" min="0.30" max="1.00" step="0.01" value="0.50">
+                <div class="row"><label>Cavity Volume V (m³)</label>
+                    <div class="val" id="volume_air_val">0.0141 m³ (14.1 L)</div>
+                </div>
+                    <input type="range" id="volume_air" min="0.0100" max="0.0250" step="0.0001" value="0.0141">
+                <div class="row"><label>Air Damping R<sub>a</sub> (N·s/m)</label>
+                    <div class="val" id="damping_air_val">0.0050</div>
+                </div>
+                <input type="range" id="damping_air" min="0.001" max="0.030" step="0.001" value="0.005">
+                </details>
+
+                <!-- TOP -->
+                <details id="blk_top" class="control-card" open>
+                    <summary>Top Plate Mode</summary>
+                    <div class="row"><label>Top Plate Mass m<sub>t</sub> (g)</label>
+                        <div class="val" id="mass_top_val">43.0 g</div>
+                </div>
+                <input type="range" id="mass_top" min="20.0" max="120.0" step="0.1" value="43.0">
+                <div class="row"><label>Top Stiffness K<sub>t</sub> (N/m)</label>
+                    <div class="val" id="stiffness_top_val">42700 N/m</div>
+                </div>
+                <input type="range" id="stiffness_top" min="20000" max="150000" step="100" value="42700">
+                <div class="row"><label>Top Damping R<sub>t</sub> (N·s/m)</label>
+                    <div class="val" id="damping_top_val">1.5</div>
+                </div>
+                <input type="range" id="damping_top" min="1.0" max="20.0" step="0.5" value="1.5">
+                <div class="row"><label>Radiating Area A<sub>t</sub> (m²)</label>
+                    <div class="val" id="area_top_val">0.0390</div>
+                </div>
+                    <input type="range" id="area_top" min="0.0300" max="0.0600" step="0.0005" value="0.0390">
+                </details>
+
+                <!-- BACK -->
+                <details id="blk_back" class="control-card" open>
+                    <summary>Back Plate Mode</summary>
+                    <div class="row"><label>Back Plate Mass m<sub>b</sub> (g)</label>
+                        <div class="val" id="mass_back_val">94.0 g</div>
+                </div>
+                <input type="range" id="mass_back" min="50.0" max="150.0" step="0.1" value="94.0">
+                <div class="row"><label>Back Stiffness K<sub>b</sub> (N/m)</label>
+                    <div class="val" id="stiffness_back_val">130000 N/m</div>
+                </div>
+                <input type="range" id="stiffness_back" min="80000" max="220000" step="100" value="130000">
+                <div class="row"><label>Back Damping R<sub>b</sub> (N·s/m)</label>
+                    <div class="val" id="damping_back_val">7.0</div>
+                </div>
+                <input type="range" id="damping_back" min="1.0" max="20.0" step="0.1" value="7.0">
+                <div class="row"><label>Back Area A<sub>b</sub> (m²)</label>
+                    <div class="val" id="area_back_val">0.0400</div>
+                </div>
+                    <input type="range" id="area_back" min="0.0300" max="0.0600" step="0.0005" value="0.0400">
+                </details>
+
+                <!-- SIDES -->
+                <details id="blk_sides" class="control-card" open>
+                    <summary>Sides / Rim Mode</summary>
+                    <div class="row"><label>Sides Mass m<sub>s</sub> (g)</label>
+                        <div class="val" id="mass_sides_val">800.0 g</div>
+                </div>
+                <input type="range" id="mass_sides" min="100.0" max="1500.0" step="0.1" value="800.0">
+                <div class="row"><label>Sides Stiffness K<sub>s</sub> (N/m)</label>
+                    <div class="val" id="stiffness_sides_val">1400000 N/m</div>
+                </div>
+                <input type="range" id="stiffness_sides" min="500000" max="3000000" step="1000" value="1400000">
+                <div class="row"><label>Sides Damping R<sub>s</sub> (N·s/m)</label>
+                    <div class="val" id="damping_sides_val">10.0</div>
+                </div>
+                <input type="range" id="damping_sides" min="1.0" max="80.0" step="1.0" value="10.0">
+                    <div class="row"><label>Sides Area A<sub>s</sub> (m²)</label>
+                        <div class="val" id="area_sides_val">0.0250</div>
+                    </div>
+                    <input type="range" id="area_sides" min="0.0100" max="0.0600" step="0.0005" value="0.0250">
+                </details>
+            </div>
+
+            <div class="action-row">
+                <button id="btn_fit_baseline">Fit My Guitar</button>
+                <button id="btn_reset">Start Over</button>
+            </div>
+            <div class="small">
+                Tip: the model is coupled. Peaks shift together as you change air volume, plate stiffness, or effective
+                areas.
+                Watch T(1,1) / A(0,1) interactions by nudging V, A<sub>h</sub>, and K<sub>t</sub>.
+            </div>
+        </section>
+
+        <section class="card pad plot-panel">
+            <div id="plot"></div>
+            <div id="peak_list"></div>
+            <details id="fit_panel_inline" class="fit-card" data-fit-panel="inline">
+            <summary>
+                <div class="fit-card__summary">
+                    <h3>Fit My Guitar</h3>
+                    <p>Tell the solver what your guitar currently measures and it will nudge the baseline sliders to match.</p>
+                </div>
+            </summary>
+            <form id="fit_form" data-fit-mode="baseline">
+                <p class="small muted">All fields are optional. Provide whatever modal frequencies or structural
+                    values you know and the baseline sliders will be adjusted toward them.</p>
+                <div class="fit-grid">
+                    <label>Target T(1,1)<sub>1</sub> (Hz)
+                        <input type="number" step="0.1" id="fit_freq_1" name="freq1" placeholder="e.g. 90">
+                    </label>
+                    <label>Target T(1,1)<sub>2</sub> (Hz)
+                        <input type="number" step="0.1" id="fit_freq_2" name="freq2" placeholder="e.g. 190">
+                    </label>
+                    <label>Target T(1,1)<sub>3</sub> (Hz)
+                        <input type="number" step="0.1" id="fit_freq_3" name="freq3" placeholder="e.g. 230">
+                    </label>
+                    <label>Top Mass m<sub>t</sub> (g)
+                        <input type="number" step="0.1" id="fit_mass_top" name="mass_top" placeholder="e.g. 43">
+                    </label>
+                    <label>Top Stiffness K<sub>t</sub> (N/m)
+                        <input type="number" step="10" id="fit_stiffness_top" name="stiffness_top"
+                            placeholder="e.g. 42000">
+                    </label>
+                    <label>Back Mass m<sub>b</sub> (g)
+                        <input type="number" step="0.1" id="fit_mass_back" name="mass_back" placeholder="e.g. 90">
+                    </label>
+                    <label>Back Stiffness K<sub>b</sub> (N/m)
+                        <input type="number" step="10" id="fit_stiffness_back" name="stiffness_back"
+                            placeholder="e.g. 130000">
+                    </label>
+                    <label>Cavity Volume V (m³)
+                        <input type="number" step="0.0001" id="fit_volume_air" name="volume_air" placeholder="e.g. 0.014">
+                    </label>
+                </div>
+                <div id="fit_status" class="fit-status small muted"></div>
+                <div class="fit-actions">
+                    <button type="button" class="ghost" data-fit-reset>Reset baseline</button>
+                    <button type="submit">Fit My Guitar</button>
+                </div>
+            </form>
+        </details>
+        </section>
+    </main>
+
+    <script src="../common/atmosphere.js" defer></script>
+    <script src="../common/solver_core.js" defer></script>
+    <script src="../vendor/plotly/plotly.min.js" defer></script>
+    <script src="../common/4dof/model_core.js" defer></script>
+    <script src="../common/4dof/main.js" defer></script>
+
+</body>
+
+</html>
