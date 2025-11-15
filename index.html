@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rick Molloy ToneLab — Coming Soon</title>
+  <link rel="stylesheet" href="tools/common/styles.css">
+  <style>
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero {
+      padding: 40px 24px 24px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 4vw, 46px);
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      margin: 0 auto;
+      max-width: 720px;
+      font-size: 18px;
+      color: var(--muted);
+    }
+
+    main {
+      flex: 1;
+      width: min(1200px, 100%);
+      margin: 0 auto;
+      padding: 0 24px 48px;
+    }
+
+    .home-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #1c2230;
+      border: 1px solid var(--border-soft);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid #2a3245;
+      background: var(--orange);
+      color: #07090e;
+      padding: 12px 20px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 18px;
+      box-shadow: 0 10px 30px rgba(230, 159, 0, 0.2);
+    }
+
+    .cta:hover {
+      filter: brightness(1.07);
+    }
+
+    ul.feature-list {
+      list-style: none;
+      margin: 16px 0 0;
+      padding: 0;
+    }
+
+    ul.feature-list li {
+      margin: 0 0 10px;
+      padding-left: 24px;
+      position: relative;
+      color: var(--ink);
+    }
+
+    ul.feature-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--orange);
+    }
+
+    .tools-list a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .tools-list a:last-child {
+      border-bottom: none;
+    }
+
+    .tools-list span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="hero">
+    <div class="pill">ToneLab private R&amp;D</div>
+    <h1>Rick Molloy Lab</h1>
+    <p>
+      A physics-forward workspace built on the modal-coupling framework pioneered by Trevor Gore,
+      translated into clear, repeatable workflows for everyday lutherie.
+      ToneLab connects plate theory, FFT measurements, and practical brace/thickness decisions—
+      without hype, mystique, or guesswork.
+    </p>
+    <a class="cta" href="mailto:rick@rickmolloy.com">
+      Request early access
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="#07090e" stroke-width="1.6"
+          stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </a>
+  </header>
+
+  <main>
+    <div class="home-grid">
+
+      <section class="card pad">
+        <h3 class="section">Coming soon</h3>
+        <p class="small">
+          The ToneLab FFT pipeline fits your tap data to calibrated plate and 4‑DOF models,
+          then walks you to small, realistic moves—brace height, mass, or air shifts—
+          with stated tolerances and expected Hz changes.
+        </p>
+        <ul class="feature-list">
+          <li>Import bridge taps or field-measured FFT peaks.</li>
+          <li>Auto-fit Gore-style top/air/back coupling with clear uncertainties.</li>
+          <li>Generate bench-ready delta recipes tied to measurable outcomes.</li>
+        </ul>
+      </section>
+
+      <section class="card pad">
+        <h3 class="section">Live lab tools</h3>
+        <p class="small">
+          These tools each follow the same philosophy: solid physics, plain language,
+          and steps you can reproduce on a real guitar.
+        </p>
+        <div class="tools-list">
+          <a href="tools/4dof_model/index.html">
+            Interactive 4-DOF model
+            <span>Top / Air / Back / Rim</span>
+          </a>
+          <a href="tools/4dof_solver/index.html">
+            Delta-recipe assistant
+            <span>Constraint-aware solver</span>
+          </a>
+          <a href="tools/monopole_mobility/index.html">
+            Monopole mobility calculator
+            <span>Stiffness &amp; modal mass workflow</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="card pad">
+        <h3 class="section">Lab ethos</h3>
+        <p class="small">
+          ToneLab is built for builders: clear units, realistic assumptions, and validation
+          against real plates—not theoretical ideals. No black boxes, no “trust me,”
+          and no claims beyond what the data will support.
+        </p>
+        <p class="small">
+          This work stands on the shoulders of Trevor Gore’s acoustic modeling
+          and is shaped by the teaching spirit of Robbie O’Brien: practical,
+          repeatable, and accessible.
+        </p>
+        <p class="small">
+          Questions or collaboration ideas? Reach out—this lab grows through shared curiosity.
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>© 2025 Rick Molloy. Educational viewing only • All rights reserved.</footer>
+</body>
+
+</html>
