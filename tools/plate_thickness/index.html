@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plate Thickness Target — ToneLab</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="card pad tl-card tl-card-info">
+    <h1>Target Plate Thickness Calculator</h1>
+    <p class="tl-card-desc">
+      Use this tool to estimate the thickness for a top or back using its dimensions, mass, and tap-tone frequencies, so
+      you can achieve consistent stiffness and a predictable acoustic response.
+    </p>
+    <p class="tl-card-desc">
+      This calculator is based on the Gore &amp; Gilet “Design” book (sections 4.5.2–4.5.3) and validated against their
+      reference tables.
+    </p>
+    <details class="tl-accordion">
+      <summary>Overview &amp; Required Measurements</summary>
+      <p class="tl-card-desc">
+        Thickness isn’t the target, stiffness is. And one of the most straightforward ways to estimate stiffness in a
+        guitar plate is by measuring its modal frequencies.
+      </p>
+      <div class="before-columns">
+        <div class="before-card">
+          <h3>How to use this tool</h3>
+          <ol class="tl-steps">
+            <li>Prepare the plate so it is smooth, rectangular, and evenly thicknessed.</li>
+            <li>Tap to identify the long grain, cross grain, and twisting modes.</li>
+            <li>Enter your measurements into the controls below.</li>
+            <li>Review the recommended target thickness.</li>
+          </ol>
+        </div>
+        <div class="before-card">
+          <h3>Measurements required</h3>
+          <ul class="tl-list">
+            <li>Guitar box length & lower-bout width (mm)</li>
+            <li>Plate length, width, and thickness (mm)</li>
+            <li>Plate mass (g)</li>
+            <li>Tap-tone frequencies: long, cross, twist (Hz)</li>
+            <li>Target modal frequency for the finished top or back (Hz)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="before-card">
+        <h3>Accuracy &amp; troubleshooting</h3>
+        <p class="tl-card-desc">
+          Measure the fundamental of each mode (an FFT helps). Uneven thickness or coarse sanding can shift the tap
+          frequencies; planing or scraping gives the most reliable readings. </p>
+        <p class="tl-card-desc">
+          If the recommended thickness seems unusually thin, re-measure your tap frequencies and compare them to the
+          examples in the Gore &amp; Gilet book. They should be in the same ballpark. If they’re not, send your numbers
+          using the form below and we’ll take a look.
+        </p>
+      </div>
+    </details>
+  </header>
+
+  <main class="tl-layout">
+
+    <section class="card pad tl-card tl-card-controls tl-control-column">
+      <h2>Panel measurements</h2>
+      <div class="input-block">
+        <h3 class="input-block__title">Geometry</h3>
+        <form id="plate_form_geometry" class="tl-control-stack">
+          <label class="field">
+            <span class="field-label">Guitar box length (mm)</span>
+            <input type="number" step="1" min="200" data-field="body_length" value="490">
+          </label>
+          <label class="field">
+            <span class="field-label">Lower bout width (mm)</span>
+            <input type="number" step="1" min="200" data-field="lower_bout" value="390">
+          </label>
+          <label class="field">
+            <span class="field-label">Panel length (mm)</span>
+            <input type="number" step="1" min="200" data-field="panel_length" value="555">
+          </label>
+          <label class="field">
+            <span class="field-label">Panel width (mm)</span>
+            <input type="number" step="1" min="200" data-field="panel_width" value="227">
+          </label>
+        </form>
+      </div>
+      <div class="input-block">
+        <h3 class="input-block__title">Mass &amp; thickness</h3>
+        <form class="tl-control-stack">
+          <label class="field">
+            <span class="field-label">Mass of panel (g)</span>
+            <input type="number" step="0.1" min="10" data-field="panel_mass" value="211.4">
+          </label>
+          <label class="field">
+            <span class="field-label">Panel thickness (mm)</span>
+            <input type="number" step="0.1" min="1" data-field="panel_height" value="4.1">
+          </label>
+        </form>
+      </div>
+      <div class="input-block">
+        <h3 class="input-block__title">Modal taps</h3>
+        <form class="tl-control-stack">
+          <label class="field">
+            <span class="field-label">Long-grain mode f<sub>L</sub> (Hz)</span>
+            <input type="number" step="0.1" min="10" data-field="long_freq" value="74">
+          </label>
+          <label class="field">
+            <span class="field-label">Cross-grain mode f<sub>C</sub> (Hz)</span>
+            <input type="number" step="0.1" min="10" data-field="cross_freq" value="109">
+          </label>
+          <label class="field">
+            <span class="field-label">Twist mode f<sub>T</sub> (Hz)</span>
+            <input type="number" step="0.1" min="10" data-field="twist_freq" value="42">
+          </label>
+        </form>
+      </div>
+      <div class="input-block">
+        <h3 class="input-block__title">Target</h3>
+        <form class="tl-control-stack">
+          <label class="field">
+            <span class="field-label">Target main tap frequency (Hz)</span>
+            <input type="number" step="0.1" min="20" data-field="target_freq" value="75">
+          </label>
+        </form>
+      </div>
+      <div class="tl-action-row">
+        <button id="reset_inputs">Reset defaults</button>
+      </div>
+    </section>
+
+    <section class="card pad tl-card tl-card-output">
+      <h2>Results</h2>
+      <p class="small muted">Results update automatically as you enter measurements.</p>
+      <div class="results-grid">
+        <div class="result-card">
+          <div class="label">Target thickness</div>
+          <div id="result_thickness" class="value tl-primary-result">—</div>
+        </div>
+        <div class="result-card">
+          <div class="label">Projected plate mass</div>
+          <div id="result_mass" class="value">—</div>
+        </div>
+        <div class="result-card">
+          <div class="label">Density ρ</div>
+          <div id="result_density" class="value">—</div>
+        </div>
+        <div class="result-card">
+          <div class="label">E<sub>L</sub></div>
+          <div id="result_el" class="value">—</div>
+        </div>
+        <div class="result-card">
+          <div class="label">E<sub>C</sub></div>
+          <div id="result_ec" class="value">—</div>
+        </div>
+        <div class="result-card">
+          <div class="label">E<sub>L</sub> / E<sub>C</sub></div>
+          <div id="result_ratio" class="value">—</div>
+        </div>
+        <div class="result-card">
+          <div class="label">G<sub>LC</sub></div>
+          <div id="result_shear" class="value">—</div>
+        </div>
+      </div>
+      <p id="result_status" class="status">Live: computed from current inputs</p>
+    </section>
+
+
+
+    <section class="card pad tl-card tl-card-info tl-span-2">
+      <h2>How the calculation works</h2>
+      <p class="tl-card-desc">
+        This calculator is based on Gore &amp; Gilet Vol. 1 (sections 4.5.2–4.5.3) and the example tables in the Design
+        book. It converts your plate’s geometry, mass, and tap-tone frequencies into stiffness properties, then
+        determines the thickness that corresponds to your target modal frequency.
+      </p>
+
+      <div class="tl-eq-block">
+        <h3>Density (ρ)</h3>
+        <p class="small muted">Derived from the bare plate mass and dimensions.</p>
+        <div class="tl-equation">ρ =
+          <span class="tl-eq-frac"><span class="tl-eq-num">m</span><span class="tl-eq-den">h · l · w</span></span>
+        </div>
+      </div>
+
+      <div class="tl-eq-block">
+        <h3>Young’s moduli (E<sub>L</sub>, E<sub>C</sub>)</h3>
+        <p class="small muted">Stiffness along and across the grain, calculated from density, geometry, and tap
+          frequencies.</p>
+        <div class="tl-equation">
+          E = 0.94146 ·
+          <span class="tl-eq-frac">
+            <span class="tl-eq-num">ρ · l<sup>4</sup> · f<sup>2</sup></span>
+            <span class="tl-eq-den">h<sup>2</sup></span>
+          </span>
+        </div>
+      </div>
+
+      <div class="tl-eq-block">
+        <h3>Shear modulus (G<sub>LC</sub>)</h3>
+        <p class="small muted">Resistance to twisting, taken from the twisting mode.</p>
+        <div class="tl-equation">
+          G = 1.21585 ·
+          <span class="tl-eq-frac">
+            <span class="tl-eq-num">ρ · l<sup>2</sup> · w<sup>2</sup> · f<sup>2</sup></span>
+            <span class="tl-eq-den">h<sup>2</sup></span>
+          </span>
+        </div>
+      </div>
+
+      <div class="tl-eq-block">
+        <h3>Target thickness (h)</h3>
+        <p class="small muted">The thickness at which the plate will reach your chosen modal frequency.</p>
+        <div class="tl-equation">
+          h =
+          <span class="tl-eq-frac">
+            <span class="tl-eq-num">0.95977 · f · a<sup>2</sup> · √ρ</span>
+            <span class="tl-eq-den">√(E<sub>L</sub> + (a/b)<sup>4</sup> · E<sub>C</sub> + (a/b)<sup>2</sup> · (0.02857 ·
+              E<sub>L</sub> + 1.12 · G<sub>LC</sub>))</span>
+          </span>
+        </div>
+      </div>
+
+      <p class="small muted">URL tip: append <code>?long=80&amp;cross=120&amp;twisting=45</code> to prefill the modal
+        taps when sharing results.</p>
+    </section>
+    <section class="card pad tl-card tl-card-info tl-span-2">
+      <h2>Help &amp; support</h2>
+      <p class="tl-card-desc">
+        If something looks off or doesn’t match what you’re hearing, send your measurements or tap clips below. I’ll
+        review them and reply with next steps.
+      </p>
+      <form class="tl-help-form">
+        <label>
+          <span>Email</span>
+          <input type="email" placeholder="you@example.com" required>
+        </label>
+        <label>
+          <span>Measurements or notes</span>
+          <textarea placeholder="Paste your readings, tap frequencies, or questions" rows="4" required></textarea>
+        </label>
+        <button type="submit">Send to Rick</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="calculator.js"></script>
+  <script src="main.js"></script>
+</body>
+
+</html>
