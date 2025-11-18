@@ -8,7 +8,7 @@ Redistribution, modification, or commercial use requires written consent from th
 
 const g = 9.8;
 const defaults = {
-  name: "Rick Molloy's guitar: 10/5/25",
+  name: "Rick Molloy OM (10/25/2025)",
   type: "steel",
   freq: 153,
   deflection: 0.18,
@@ -16,7 +16,7 @@ const defaults = {
 };
 
 const typeLabels = {
-  steel: "Steel string",
+  steel: "Steel-string",
   classical: "Classical",
   other: "Other",
 };
@@ -46,6 +46,7 @@ const outputs = {
   effMass: document.getElementById("effMass"),
   mobilityScore: document.getElementById("mobilityScore"),
   status: document.getElementById("status"),
+  warnings: document.getElementById("warnings")
 };
 
 const buttons = {
@@ -98,6 +99,7 @@ function compute() {
   outputs.stiffness.textContent = formatter({ max: 0 }).format(stiffness);
   outputs.effMass.textContent = formatter({ min: 1, max: 1 }).format(meffG);
   outputs.mobilityScore.textContent = fmtMobility.format(mobilityScore);
+  setWarnings({ freq, deflection, mass, mobilityScore });
 
   const nameMatches = nameInput.value.trim() === defaults.name;
   const typeMatches = typeSelect.value === defaults.type;
@@ -121,6 +123,7 @@ function setOutputs(value) {
   outputs.stiffness.textContent = value;
   outputs.effMass.textContent = value;
   outputs.mobilityScore.textContent = value;
+  outputs.warnings.textContent = "";
   buttons.copy.disabled = true;
 }
 
@@ -205,3 +208,24 @@ nameInput.addEventListener("input", compute);
 typeSelect.addEventListener("change", compute);
 
 resetInputs();
+
+function setWarnings({ freq, deflection, mass, mobilityScore }) {
+  const notes = [];
+  if (freq < 90 || freq > 220) {
+    notes.push("f\u2090 is outside 90–220 Hz. Re-check the sealed-soundhole peak.");
+  }
+  if (deflection < 0.05) {
+    notes.push("Deflection is very small. Confirm gauge reading and load; may be outside normal jig range.");
+  } else if (deflection > 0.5) {
+    notes.push("Deflection is high. Reduce test mass to avoid overloading the top.");
+  }
+  if (mass < 0.3 || mass > 2.0) {
+    notes.push("Test mass is outside the usual 0.3–2.0 kg band. Typical jigs use 0.5–1.5 kg.");
+  }
+  if (mobilityScore < 15) {
+    notes.push("Mobility <15 suggests a very stiff top. Confirm deflection, mass, and units.");
+  } else if (mobilityScore > 40) {
+    notes.push("Mobility >40 suggests a very compliant top. Confirm mass and dial gauge readings.");
+  }
+  outputs.warnings.textContent = notes.join(" ");
+}

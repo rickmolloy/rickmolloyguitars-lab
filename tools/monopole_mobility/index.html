@@ -15,30 +15,60 @@ No redistribution, modification, or commercial use without written consent from 
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-  <body>
-    <header class="card pad">
-      <h1>Monopole Mobility — Gore Jig Method</h1>
-      <div class="muted">
-        Sealed soundhole + muted strings → capture the uncoupled top monopole (f<sub>u</sub>).
-        Add a known test mass to the jig, record bridge deflection, and the calculator produces stiffness (K),
-        effective modal mass (M<sub>eff</sub>), and the standard mobility score.
+<body>
+  <header class="card pad tl-card tl-card-info">
+    <h1>Monopole Mobility — Gore Jig Method</h1>
+    <p class="tl-card-desc">
+      <strong>Use this tool to</strong> translate your Gore-style monopole mobility jig readings into top stiffness K,
+      effective modal mass M<sub>eff</sub>, and the monopole mobility score—so you can compare guitars on a consistent scale.
+    </p>
+    <p class="tl-card-desc">
+      <strong>Why this matters:</strong> Monopole mobility shows how freely the top pumps air at its main resonance.
+      Alongside tap tones and thickness, it helps you avoid tops that are too stiff to respond or too floppy to hold up.
+    </p>
+    <div class="sample-note badge">
+      Default dataset: Rick Molloy OM (10/25/2025) — spruce / steel-string, m = 1.02 kg, x = 0.18 mm, f<sub>u</sub> = 153 Hz
+    </div>
+    <details class="tl-accordion">
+      <summary>Overview &amp; required measurements</summary>
+      <p class="tl-card-desc">
+        Seal the soundhole, mute the strings, tap the top to find the uncoupled monopole f<sub>u</sub>, then hang a known mass over the bridge and record deflection x.
+      </p>
+      <div class="before-card">
+        <h3>Measurements required</h3>
+        <ul class="tl-list">
+          <li>Uncoupled top monopole frequency f<sub>u</sub> (Hz)</li>
+          <li>Bridge deflection under test mass x (mm)</li>
+          <li>Test mass m (kg)</li>
+          <li>Guitar type (steel-string, classical, other)</li>
+        </ul>
       </div>
-      <div class="sample-note badge">
-        Default dataset: Rick Molloy's OM (10/25/2025) — Spruce/SS, m = 1.02 kg, x = 0.18 mm, f<sub>u</sub> = 153 Hz
+      <div class="before-card">
+        <h3>How to use this tool</h3>
+        <ol class="tl-steps">
+          <li>Seal the soundhole so the box is airtight.</li>
+          <li>Mute the strings, tap the top, and record the uncoupled top frequency f<sub>u</sub> with your FFT app.</li>
+          <li>Mount the mobility jig – hang a known test mass (m) vertically over the bridge and measure deflection (x) in millimeters.</li>
+          <li>Enter f<sub>u</sub>, x, and m above. The calculator converts x → meters, computes K, M<sub>eff</sub>, and mobility.</li>
+          <li>Review the score and compare to the target ranges.</li>
+        </ol>
       </div>
-    </header>
+    </details>
+  </header>
 
   <main>
+
     <section class="card pad controls">
       <h2>Measurement Inputs</h2>
+      <div class="muted small">Enter measurements from a sealed-soundhole, muted-strings tap and jig deflection.</div>
       <label class="name-input">
         Guitar / sample name
-        <input id="instrument_name" type="text" value="Rick Molloy's guitar: 10/5/25" />
+        <input id="instrument_name" type="text" value="Rick Molloy OM (10/25/2025)" />
       </label>
       <label class="type-input">
         Build type
         <select id="instrument_type">
-          <option value="steel" selected>Steel String</option>
+          <option value="steel" selected>Steel-string</option>
           <option value="classical">Classical</option>
           <option value="other">Other</option>
         </select>
@@ -46,7 +76,7 @@ No redistribution, modification, or commercial use without written consent from 
       <div class="inputs">
         <div class="slider-block">
           <div class="slider-row row">
-            <label for="freq_field">Uncoupled top monopole f<sub>u</sub> (Hz)</label>
+            <label for="freq_field">Uncoupled top monopole f<sub>u</sub> (Hz)<span class="help-text">Sealed soundhole &amp; muted strings</span></label>
             <input id="freq_field" class="value-input" type="number" min="90" max="220" step="0.1" value="153" />
           </div>
           <input id="freq" type="range" min="90" max="220" step="0.1" value="153" />
@@ -54,7 +84,7 @@ No redistribution, modification, or commercial use without written consent from 
 
         <div class="slider-block">
           <div class="slider-row row">
-            <label for="deflection_field">Bridge deflection under load (mm)</label>
+            <label for="deflection_field">Bridge deflection under load x (mm)<span class="help-text">Dial gauge at bridge, vertical load</span></label>
             <input id="deflection_field" class="value-input" type="number" min="0.05" max="0.50" step="0.005" value="0.18" />
           </div>
           <input id="deflection" type="range" min="0.05" max="0.50" step="0.005" value="0.18" />
@@ -62,7 +92,7 @@ No redistribution, modification, or commercial use without written consent from 
 
         <div class="slider-block">
           <div class="slider-row row">
-            <label for="mass_field">Test mass (kg)</label>
+            <label for="mass_field">Test mass m (kg)<span class="help-text">Hang vertically over the bridge</span></label>
             <input id="mass_field" class="value-input" type="number" min="0.30" max="1.80" step="0.01" value="1.02" />
           </div>
           <input id="mass" type="range" min="0.30" max="1.80" step="0.01" value="1.02" />
@@ -78,11 +108,19 @@ No redistribution, modification, or commercial use without written consent from 
       <div class="results-header">
         <h2>Calculated Properties</h2>
         <div class="results-meta">
-          <span id="instrument_display" class="badge">Rick Molloy's guitar: 10/5/25 • Steel string</span>
+          <span id="instrument_display" class="badge">Rick Molloy OM (10/25/2025) • Steel-string</span>
           <span id="status" class="status muted">Live: Rick Molloy OM (10/25/2025)</span>
         </div>
       </div>
       <div class="result-grid">
+        <article class="result-card highlighted">
+          <div class="label">Monopole mobility score</div>
+          <div class="value-row">
+            <div id="mobilityScore" class="value">—</div>
+            <span class="unit-inline">score</span>
+          </div>
+          <div class="note">1000 / √(K · M<sub>eff</sub>)</div>
+        </article>
         <article class="result-card">
           <div class="label">Top stiffness K</div>
           <div class="value-row">
@@ -97,43 +135,91 @@ No redistribution, modification, or commercial use without written consent from 
             <div id="effMass" class="value">—</div>
             <span class="unit-inline">g</span>
           </div>
-          <div class="note">M<sub>eff</sub> = K / (2πf)<sup>2</sup></div>
-        </article>
-        <article class="result-card">
-          <div class="label">Monopole mobility</div>
-          <div class="value-row">
-            <div id="mobilityScore" class="value">—</div>
-            <span class="unit-inline">score</span>
-          </div>
-          <div class="note">1000 / √(K · M<sub>eff</sub>)</div>
+          <div class="note">M<sub>eff</sub> = K / (2π f<sub>u</sub>)<sup>2</sup></div>
         </article>
       </div>
       <div class="muted small">
-        Lower scores mean a stiffer top. Aim for ≈20 on a responsive OM/steel‑string build and ≈30 for classicals.
+        Lower scores mean a stiffer top. Aim for ≈20 on a responsive steel‑string OM, ≈30 for classicals. &lt;15 = very stiff, &gt;40 = very compliant.
+      </div>
+      <div id="warnings" class="muted small"></div>
+      <div class="muted small">
+        Top stiffness K and effective mass M<sub>eff</sub> can be entered into the 4‑DOF solver to model your guitar’s
+        air/top/back coupling and to generate realistic brace/plate tuning deltas when aiming at specific frequencies.
       </div>
     </section>
 
-    <section class="card pad formulas">
-      <h2>How to Measure</h2>
-      <ol>
-        <li>Seal the soundhole – Use tape or a food container lid to make it airtight.</li>
-        <li>Mute the strings, tap the top, and record the uncoupled top frequency (f<sub>u</sub>) with your FFT app.</li>
-        <li>Mount the mobility jig – Hang a known test mass (m) vertically over the bridge and measure deflection (x) in millimeters.</li>
-        <li>The deflection should be small but elastic — don’t crush the top.</li>
-        <li>Enter your readings above – The calculator converts x → meters, computes stiffness (K), effective modal mass (M<sub>eff</sub>), and mobility.</li>
-        <li>The score tells you how freely the top moves air.</li>
-      </ol>
-      <details class="checklist" open>
-        <summary>Field Notes</summary>
-        <ul>
-          <li>Make sure the soundhole seal is airtight before tapping.</li>
-          <li>Input deflection in millimeters — most dial gauges read tiny movements.</li>
-          <li>Keep mass in kilograms (no grams conversion here).</li>
-          <li>Apply load vertically at the bridge; avoid rocking or twisting.</li>
-        </ul>
+    <section class="card pad tl-card tl-card-info tl-span-2">
+      <h2>How this tool works</h2>
+      <p class="tl-card-desc">
+        Based on the Gore &amp; Gilet monopole mobility jig (Vol. 1). The calculator converts your jig measurements into
+        top stiffness at the bridge (K), effective modal mass (M<sub>eff</sub>), and the standard monopole mobility score.
+      </p>
+
+      <div class="tl-eq-block">
+        <h3>Force from test mass</h3>
+        <p class="small muted">The hanging mass sets the applied force.</p>
+        <div class="tl-equation">F = m · g</div>
+      </div>
+
+      <div class="tl-eq-block">
+        <h3>Top stiffness at the bridge</h3>
+        <p class="small muted">Deflection (x) is converted to meters.</p>
+        <div class="tl-equation">K = F / x</div>
+      </div>
+
+      <div class="tl-eq-block">
+        <h3>Effective modal mass</h3>
+        <p class="small muted">Derived from stiffness and the uncoupled top frequency.</p>
+        <div class="tl-equation">M<sub>eff</sub> = K / (2π f<sub>u</sub>)<sup>2</sup></div>
+      </div>
+
+      <div class="tl-eq-block">
+        <h3>Monopole mobility score</h3>
+        <p class="small muted">Dimensionless index used for build-to-build comparisons.</p>
+        <div class="tl-equation">Mobility score = 1000 / √(K · M<sub>eff</sub>)</div>
+      </div>
+    </section>
+
+    <section class="card pad tl-card tl-card-info tl-span-2">
+      <details class="tl-accordion help-accordion">
+        <summary>Need help with this tool? <span class="muted">I read every message.</span></summary>
+        <p class="muted">If your results don’t match what you’re hearing, share your measurements and a short tap clip. I’ll take a look.</p>
+        <div id="mc_embed_shell">
+          <link href="//cdn-images.mailchimp.com/embedcode/classic-061523.css" rel="stylesheet" type="text/css">
+          <div id="mc_embed_signup">
+            <form action="https://celestialinstruments.us12.list-manage.com/subscribe/post?u=64b5700d159e15ecf6f527445&amp;id=4d023713d1&amp;f_id=00f844e0f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank">
+              <div id="mc_embed_signup_scroll">
+                <h2>Reach out to Rick</h2>
+                <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+                <div class="mc-field-group">
+                  <label for="mce-EMAIL">Email Address <span class="asterisk">*</span></label>
+                  <input type="email" name="EMAIL" class="required email" id="mce-EMAIL" required value="">
+                </div>
+                <div class="mc-field-group">
+                  <label for="mce-FNAME">First Name </label>
+                  <input type="text" name="FNAME" class=" text" id="mce-FNAME" value="">
+                </div>
+                <div id="mce-responses" class="clear">
+                  <div class="response" id="mce-error-response" style="display: none;"></div>
+                  <div class="response" id="mce-success-response" style="display: none;"></div>
+                </div>
+                <div aria-hidden="true" style="position: absolute; left: -5000px;"><input type="text" name="b_64b5700d159e15ecf6f527445_4d023713d1" tabindex="-1" value=""></div>
+                <div class="clear"><input type="submit" name="subscribe" id="mc-embedded-subscribe" class="button" value="Send"></div>
+              </div>
+            </form>
+          </div>
+          <script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"></script>
+          <script type="text/javascript">(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[7]='SMSPHONE';ftypes[7]='smsphone';fnames[2]='LNAME';ftypes[2]='text';fnames[3]='ADDRESS';ftypes[3]='address';fnames[4]='PHONE';ftypes[4]='phone';fnames[5]='BIRTHDAY';ftypes[5]='birthday';fnames[6]='COMPANY';ftypes[6]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+        </div>
       </details>
     </section>
   </main>
+
+  <footer class="card pad tl-footer">
+    <div>© 2025 Rick Molloy. All rights reserved.</div>
+    <div>Licensed for educational use only. No redistribution without written consent.</div>
+    <div>Tools provided by Rick Molloy • <a href="/">ToneLab</a></div>
+  </footer>
 
   <script src="main.js" defer></script>
 </body>

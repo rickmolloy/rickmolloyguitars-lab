@@ -225,22 +225,23 @@
         taps when sharing results.</p>
     </section>
     <section class="card pad tl-card tl-card-info tl-span-2">
-      <h2>Help &amp; support</h2>
-      <p class="tl-card-desc">
-        If something looks off or doesn’t match what you’re hearing, send your measurements or tap clips below. I’ll
-        review them and reply with next steps.
-      </p>
-      <form class="tl-help-form">
-        <label>
-          <span>Email</span>
-          <input type="email" placeholder="you@example.com" required>
-        </label>
-        <label>
-          <span>Measurements or notes</span>
-          <textarea placeholder="Paste your readings, tap frequencies, or questions" rows="4" required></textarea>
-        </label>
-        <button type="submit">Send to Rick</button>
-      </form>
+      <details class="tl-accordion help-accordion">
+        <summary>Need help with this tool? <span class="muted">I read every message.</span></summary>
+        <p class="tl-card-desc">
+          If your results don’t match what you’re expecting, share your measurements and a note. I’ll take a look.
+        </p>
+        <form class="tl-help-form">
+          <label>
+            <span>Email</span>
+            <input type="email" placeholder="you@example.com" required>
+          </label>
+          <label>
+            <span>Measurements or notes</span>
+            <textarea placeholder="Paste your readings, tap frequencies, or questions" rows="4" required></textarea>
+          </label>
+          <button type="submit">Send to Rick</button>
+        </form>
+      </details>
     </section>
   </main>
 
