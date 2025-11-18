@@ -1,8 +1,19 @@
 @import url("../common/styles.css");
 
 main {
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  display: grid;
+  grid-template-columns: 380px minmax(0, 1fr);
   gap: 16px;
+  align-items: start;
+  max-width: 1300px;
+  margin: 0 auto;
+  grid-auto-flow: row;
+}
+
+@media (max-width: 900px) {
+  main {
+    grid-template-columns: 1fr;
+  }
 }
 
 .tl-card-info h3 {
@@ -39,12 +50,12 @@ main {
 }
 
 .tl-span-2 {
-  grid-column: span 2;
+  grid-column: 1 / -1;
 }
 
 @media (max-width: 900px) {
   .tl-span-2 {
-    grid-column: span 1;
+    grid-column: 1;
   }
 }
 
@@ -99,6 +110,16 @@ main {
   flex-direction: column;
   gap: 18px;
   margin-top: 12px;
+}
+
+.controls {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  align-self: start;
+}
+
+.results {
+  grid-column: 2;
 }
 
 .name-input {
