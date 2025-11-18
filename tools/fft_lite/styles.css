@@ -1,0 +1,317 @@
+@import url("../common/styles.css");
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+main.tl-layout {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(280px, 360px) 1fr;
+  align-items: start;
+}
+@media (max-width: 960px) {
+  main.tl-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tl-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.tl-card-controls {
+  gap: 16px;
+  background: var(--panel);
+}
+.tl-card-output {
+  gap: 16px;
+}
+
+.tl-span-2 {
+  grid-column: span 2;
+}
+@media (max-width: 960px) {
+  .tl-span-2 {
+    grid-column: span 1;
+  }
+}
+
+.tl-control-column {
+  background: var(--panel);
+}
+.tl-control-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.field-label {
+  color: var(--muted);
+  font-size: 13px;
+}
+.field input,
+.field select {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--ink);
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.input-block {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: 12px;
+  background: color-mix(in srgb, var(--panel) 90%, var(--bg));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input-block__title {
+  margin: 0 0 6px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.button-row, .toggle-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.plot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.plot-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.plot-card {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: 12px;
+  background: color-mix(in srgb, var(--panel) 90%, var(--bg));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.plot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.plot-header .meta {
+  color: var(--muted);
+  font-size: 12px;
+}
+.hover-readout {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 12px;
+  color: var(--muted);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 6px 10px;
+  background: color-mix(in srgb, var(--panel) 85%, var(--bg));
+}
+
+.plot {
+  width: 100%;
+  height: 320px;
+}
+.plot.large-plot {
+  height: 360px;
+}
+.plot.plot-thin {
+  height: 140px;
+}
+
+.note-grid {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 6px;
+}
+.note-grid .note-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--panel) 85%, var(--bg));
+  border: 1px solid var(--border-soft);
+  color: var(--ink);
+}
+.note-grid .note-pill .note {
+  font-weight: 600;
+}
+.note-grid .note-pill .freq {
+  color: var(--muted);
+}
+
+.tl-btn {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--panel-hover);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.tl-btn:hover {
+  background: var(--orange);
+  color: #111;
+}
+.tl-btn.secondary {
+  background: color-mix(in srgb, var(--panel-hover) 80%, var(--bg));
+}
+.tl-btn.danger {
+  color: #111;
+  background: color-mix(in srgb, var(--vermilion) 60%, var(--panel-hover));
+  border-color: color-mix(in srgb, var(--vermilion) 60%, var(--border-soft));
+}
+
+.field.checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.peak-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+.peak-pill {
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: color-mix(in srgb, var(--panel) 90%, var(--bg));
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+}
+.peak-pill .freq {
+  font-weight: 600;
+  color: var(--ink);
+}
+.peak-pill .note {
+  color: var(--muted);
+  font-size: 12px;
+}
+.peak-pill .value {
+  color: var(--orange);
+  font-variant-numeric: tabular-nums;
+}
+
+.tl-accordion {
+  width: 100%;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--panel) 85%, var(--bg));
+}
+.tl-accordion summary {
+  cursor: pointer;
+  font-weight: 600;
+  width: 100%;
+}
+.track-list {
+  min-height: 24px;
+  border: 1px dashed var(--border-soft);
+  border-radius: 8px;
+  padding: 6px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tl-accordion-body {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tl-steps {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.tl-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.annotation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.annotation-table {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-top: 8px;
+}
+.annotation-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 8px 10px;
+  gap: 6px;
+  align-items: center;
+}
+.annotation-head {
+  background: color-mix(in srgb, var(--panel) 90%, var(--bg));
+  color: var(--muted);
+  font-weight: 600;
+}
+.annotation-row:not(.annotation-head) {
+  border-top: 1px solid var(--border-soft);
+}
+.annotation-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
