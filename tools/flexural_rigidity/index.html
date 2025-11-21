@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flexural Rigidity (EI) Calculator — ToneLab</title>
+  <link rel="stylesheet" href="../common/styles.css">
+  <style>
+    body {
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 16px;
+      align-items: start;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .pill {
+      display: inline-flex;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: color-mix(in srgb, var(--panel) 85%, var(--bg));
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .tl-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .input-block,
+    .result-block {
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: color-mix(in srgb, var(--panel) 92%, var(--bg));
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .input-block h3,
+    .result-block h3 {
+      margin: 0;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .field {
+      display: grid;
+      grid-template-columns: 1fr 120px;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .field input {
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: var(--bg);
+      color: var(--blue);
+      font-size: 15px;
+      text-align: right;
+      max-width: 120px;
+    }
+    .field select {
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 14px;
+      min-width: 120px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .tl-steps,
+    .tl-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .result-card {
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: color-mix(in srgb, var(--panel) 90%, var(--bg));
+      text-align: center;
+    }
+
+    .result-card .label {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .result-card .value {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .tl-primary {
+      color: var(--orange);
+      font-size: 26px;
+    }
+
+    .tl-span-2 {
+      grid-column: 1 / -1;
+    }
+    .controls-column {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+    }
+    .right-stack {
+      grid-column: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .brace-position-card {
+      gap: 12px;
+    }
+    .brace-slider {
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+      padding: 10px;
+      background: color-mix(in srgb, var(--panel) 92%, var(--bg));
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .brace-slider header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .brace-slider input[type="range"] {
+      width: 100%;
+    }
+    .brace-slider .value {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .brace-position-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .brace-position-actions button {
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      padding: 6px 10px;
+      background: var(--panel-hover);
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .brace-position-actions button:hover {
+      background: var(--orange);
+      color: #111;
+    }
+
+    .viz-card {
+      gap: 10px;
+    }
+    .viz-frame {
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--panel) 92%, var(--bg));
+      padding: 8px;
+    }
+    svg#aa_view {
+      width: 100%;
+      height: 320px;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="card pad tl-card">
+    <div class="pill">Pre-release tool for Lutherie Academy</div>
+    <h1>Flexural Rigidity (EI) Calculator</h1>
+    <p class="small">
+      Use this tool to calculate flexural rigidity for a guitar top along the AA line—so you can compare stiffness across
+      wood species, brace patterns, and thicknesses without waiting for a full build.
+    </p>
+    <p class="small">
+      Why this matters: EI links your plate’s thickness, modulus, and span to how much it will bend. Knowing EI helps
+      you balance strength and responsiveness before committing to a top, back, or brace set.
+    </p>
+    <details class="muted">
+      <summary><strong>Measurements required</strong></summary>
+      <ul class="tl-list">
+        <li>Panel length and width (mm)</li>
+        <li>Panel thickness (mm)</li>
+        <li>Panel mass (g)</li>
+        <li>Tap-tone frequencies along and across the grain (Hz)</li>
+      </ul>
+    </details>
+  </header>
+
+  <main>
+    <section class="card pad tl-card controls-column">
+      <h2>Inputs</h2>
+      <p class="small muted">Defaults reflect a spruce OM slice at the AA line. Adjust span, thickness, and brace stack to match your build.</p>
+
+      <div class="input-block">
+        <h3>Top geometry</h3>
+        <label class="field">
+          <span>AA span (mm)</span>
+          <input type="number" data-field="spanAA" value="500" min="300" step="1">
+        </label>
+        <label class="field">
+          <span>Top thickness at AA (mm)</span>
+          <input type="number" data-field="topThickness" value="4.0" min="2.0" step="0.1">
+        </label>
+        <label class="field">
+          <span>Top modulus E (GPa)</span>
+          <input type="number" data-field="topModulus" value="10.0" min="1" step="0.1">
+        </label>
+      </div>
+
+      <div class="input-block">
+        <h3>Brace (AA intercept)</h3>
+        <label class="field">
+          <span>Intercept breadth b (mm)</span>
+          <input type="number" data-field="brace_b" value="20" min="5" step="1">
+        </label>
+        <label class="field">
+          <span>Bottom height h (mm)</span>
+          <input type="number" data-field="bottom_h" value="5" min="0" step="0.5">
+        </label>
+        <label class="field">
+          <span>Middle height h (mm)</span>
+          <input type="number" data-field="middle_h" value="5" min="0" step="0.5">
+        </label>
+        <label class="field">
+          <span>Top cap height h (mm)</span>
+          <input type="number" data-field="top_h" value="7" min="0" step="0.5">
+        </label>
+        <label class="field">
+          <span>Top cap shape</span>
+          <select data-field="top_shape">
+            <option value="triangle">Triangle</option>
+            <option value="parabolic">Parabolic</option>
+            <option value="rectangle">Rectangle</option>
+            <option value="none">None</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Brace material E (GPa)</span>
+          <input type="number" data-field="brace_modulus" value="12" min="1" step="0.5">
+        </label>
+        <p class="small muted">This single-brace slice uses one intercept breadth b and three stacked segments (bottom, middle, cap).</p>
+      </div>
+
+      <div class="input-block">
+        <h3>Bridge check</h3>
+        <label class="field">
+          <span>Applied bridge moment (N·m)</span>
+          <input type="number" data-field="bridge_moment" value="12" min="1" step="0.5">
+        </label>
+        <label class="field">
+          <span>Target rotation limit (deg)</span>
+          <input type="number" data-field="bridge_limit" value="2" min="0.1" step="0.1">
+        </label>
+        <p class="small muted">Simple slope estimate using moment / EI. Treats the AA slice as a unit lever for rotation check.</p>
+      </div>
+    </section>
+
+    <div class="right-stack">
+      <section class="card pad tl-card viz-card">
+        <h2>AA-line visualization</h2>
+        <p class="small muted">Scaled preview of the AA slice: top thickness and brace stack centered on the span.</p>
+        <div class="viz-frame">
+          <svg id="aa_view" viewBox="0 0 700 320" role="img" aria-label="AA line cross-section">
+            <rect id="viz_bg" x="0" y="0" width="700" height="320" fill="transparent" />
+            <line id="viz_axis_y" x1="0" y1="0" x2="0" y2="0" stroke="var(--border-soft)" stroke-width="1.5" />
+            <line id="viz_axis_x" x1="0" y1="0" x2="0" y2="0" stroke="var(--border-soft)" stroke-width="1.5" />
+            <line id="viz_span_line" x1="0" y1="0" x2="0" y2="0" stroke="var(--border-soft)" stroke-width="1" stroke-dasharray="4 4" />
+            <rect id="viz_top" x="0" y="0" width="0" height="0" fill="var(--panel)" stroke="var(--border-soft)" />
+            <g id="viz_braces"></g>
+            <line id="viz_centroid" x1="0" y1="0" x2="0" y2="0" stroke="var(--orange)" stroke-width="2" stroke-dasharray="4 3" />
+          </svg>
+        </div>
+        <div class="small muted" id="viz_status"></div>
+      </section>
+
+      <section class="card pad tl-card brace-position-card">
+        <h2>Brace positions</h2>
+        <p class="small muted">Place braces across the AA line. Sliders move each brace ± from the center (mm).</p>
+        <div id="brace_positions"></div>
+        <div class="brace-position-actions">
+          <button type="button" id="space_braces">Space evenly</button>
+          <button type="button" id="add_brace">+ Add brace</button>
+        </div>
+      </section>
+
+      <section class="card pad tl-card">
+        <h2>Results</h2>
+        <p class="small muted">Live results update as you type. EI shown in N·m².</p>
+        <div class="results-grid">
+          <div class="result-card">
+            <div class="label">Composite EI (N·m²)</div>
+            <div id="result_ei" class="value tl-primary">—</div>
+          </div>
+          <div class="result-card">
+            <div class="label">Transformed I (mm⁴)</div>
+            <div id="result_I" class="value">—</div>
+          </div>
+          <div class="result-card">
+            <div class="label">Centroid from plate (mm)</div>
+            <div id="result_centroid" class="value">—</div>
+          </div>
+          <div class="result-card">
+            <div class="label">Brace height (mm)</div>
+            <div id="result_brace_height" class="value">—</div>
+          </div>
+          <div class="result-card">
+            <div class="label">Bridge rotation (deg)</div>
+            <div id="result_rotation" class="value">—</div>
+          </div>
+          <div class="result-card">
+            <div class="label">Rotation status</div>
+            <div id="result_rotation_status" class="value">—</div>
+          </div>
+        </div>
+        <p id="result_status" class="small muted">Live: ready for inputs.</p>
+      </section>
+    </div>
+
+    <section class="card pad tl-card tl-span-2">
+      <h2>How to interpret and next steps</h2>
+      <p class="small">
+        Typical steel-string spruce tops land between 120–220 Nm² depending on thickness and brace layout. Lower EI
+        means more flex (livelier), higher EI means more resistance to bending. Compare against your plate thickness and
+        modal targets to decide how much to thin or brace.
+      </p>
+      <h3 class="section">Common pitfalls</h3>
+      <ul class="tl-list">
+        <li>Using braced plates or finished tops (measure bare plates only).</li>
+        <li>Confusing harmonic taps with fundamentals.</li>
+        <li>Mixing units (mm vs inches) or grams vs kilograms.</li>
+        <li>Panels not uniform in thickness; sand or plane before measuring.</li>
+      </ul>
+      <h3 class="section">Help</h3>
+      <p class="small muted">If something looks off, email your measurements or tap files to rick@rickmolloy.com and I’ll take a look.</p>
+    </section>
+  </main>
+
+  <script>
+    if (typeof window !== "undefined") {
+      window.exports = window.exports || {};
+      window.module = window.module || { exports: window.exports };
+      window.require = window.require || function () { return {}; };
+    }
+  </script>
+  <script src="calculator.js"></script>
+  <script src="main.js"></script>
+</body>
+
+</html>
